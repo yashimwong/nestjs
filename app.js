@@ -1,36 +1,26 @@
-const fs = require("fs");
+const http = require("http");
+const { readFileSync } = require("fs");
 
-const express = require("express");
-const port = 3000;
-const app = express();
+// get all files
+const home_page = readFileSync("./navbar-app/index.html");
 
-app.use((req, res, next) => {
-  console.log("Middleware 1");
-  next();
+const server = http.createServer((req, res) => {
+  const url = req.url;
+  if (url === "/") {
+    res.writeHead(200, { "content-type": "text/html" });
+    res.write(home_page);
+    res.end();
+  } else if (url === "/about") {
+    res.writeHead(200, { "content-type": "text/html" });
+    res.write("<h1>About Page</h1>");
+    res.end();
+  } else {
+    res.writeHead(200, { "content-type": "text/html" });
+    res.write("<h1>Page not found</h1>");
+    res.end();
+  }
 });
 
-app.use((req, res, next) => {
-  console.log("Middleware 2");
-  next();
-});
-
-app.get("/", (req, res) => {
-  res.send(`
-    <form action="/add-message" method="POST">
-        <input name="message" type="text" />
-        <button type="submit">Submit Message</button>
-    </form>
-    `);
-
-  res.end();
-});
-
-app.post("/add-message", (req, res) => {
-  res.send(`
-    <h1>Message Sent!!</h1>
-    `);
-});
-
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
+server.listen(5000, () => {
+  console.log("Server started on http://localhost:5000");
 });
