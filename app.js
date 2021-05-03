@@ -1,14 +1,11 @@
 const express = require("express");
-const path = require("path");
-
+const { products } = require("./data");
 const app = express();
 
-app.use(express.static("./public"));
-
-app.all("*", (req, res) => {
-  res.status(400).send("Resource not found");
+app.get("/", (req, res) => {
+  res.json(products);
 });
 
 app.listen(5000, () => {
-  console.log("Server is listening on http://localhost:5000");
+  console.log("Server is running at http://localhost:5000");
 });
