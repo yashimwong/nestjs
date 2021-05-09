@@ -1,28 +1,25 @@
 const express = require("express");
 const app = express();
+let { people } = require("./data");
 
-const morgan = require("morgan");
-const auth = require("./authorize");
-const logger = require("./logger");
+app.use(express.static("./public"));
 
-// Pass in middleware to app.use to use it on all route
-// order matters. Only those below this uses the middleware
-app.use([morgan("tiny"), express.static("./public")]);
-
-app.get("/", (req, res) => {
-  res.send("Home");
+app.get("/people", (req, res) => {
+  return res.status(200).json({ success: true, data: people });
 });
 
-app.get("/about", (req, res) => {
-  console.log(req.user);
-  res.send("About");
-});
-
-app.get("/api/items", (req, res) => {
-  console.log(req.user);
-  res.send("Items");
+app.get("/people/:id", (req, res) => {
+  const { id } = req.params;
+  const filtered_people = people.find((p) => p.id === Number(id));
+  if (!filtered_people) {
+    return res
+      .status(200)
+      .json({ success: false, data: "No people found matching your query." });
+  }
+  res.status(200).json({ success: true, data: filtered_people });
 });
 
 app.listen(5000, () => {
   console.log("Server is running at http://localhost:5000");
 });
+2;
