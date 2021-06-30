@@ -24,7 +24,6 @@ export class TasksRepository extends Repository<Task> {
     }
 
     const tasks = await query.getMany();
-    7;
     return tasks;
   }
 
